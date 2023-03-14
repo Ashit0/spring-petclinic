@@ -4,12 +4,17 @@ pipeline{
     }
     triggers{ pollSCM( '* * * * *') }
     stages{
-        stage('BUILD'){
+        stage('vcs'){
             steps{
             git url: 'https://github.com/Ashit0/spring-petclinic.git',
                 branch: 'develop'
             } 
         } 
+        stage('BUILD'){
+            steps{
+                sh './mvnw package'
+            }
+        }
         
     }
 
