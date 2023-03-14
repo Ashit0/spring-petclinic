@@ -10,6 +10,14 @@ pipeline{
                 branch: 'release'
             } 
         } 
+        stage('Post build'){
+            steps{
+                archiveArtifacts artifacts: '**/target/spring-petclinic-3.0.0-SNAPSHOT.jar'
+                                 onlyIfSuccessful: true
+                junit testResults: '**/surefire-reports/TEST-*.xml'                 
+            }
+
+        }
         stage('Sonar analysis'){
             steps{
                 withSonarQubeEnv('SONAR_CLOUD'){
