@@ -7,14 +7,9 @@ pipeline{
         stage('vcs'){
             steps{
             git url: 'https://github.com/Ashit0/spring-petclinic.git',
-                branch: 'develop'
+                branch: 'release'
             } 
         } 
-        stage('BUILD'){
-            steps{
-                sh './mvnw package'
-            }
-        }
         stage('Sonar analysis'){
             steps{
                 withSonarQubeEnv('SONAR_CLOUD'){
