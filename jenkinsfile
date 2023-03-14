@@ -18,7 +18,11 @@ pipeline{
         stage('Sonar analysis'){
             steps{
                 withSonarQubeEnv('SONAR_CLOUD'){
-                    sh './mvnw clean package sonar:sonar -Dsonar.organization=ashit -Dsonar.projectkey=ashit_ashit-project'
+                    sh './mvnw clean package sonar:sonar \
+                        -Dsonar.login=c45d5483f45a3dd0809ee3a87af7c32c1349cc6e \
+                       -Dsonar.host.url=https://sonarcloud.io \
+                        -Dsonar.organization=ashit \
+                         -Dsonar.projectKey=ashit_ashit-project'
                 }
             }
         }
