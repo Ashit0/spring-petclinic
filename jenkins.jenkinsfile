@@ -1,0 +1,16 @@
+pipeline{
+    agent{
+        label 'JDK_17'
+    }
+    triggers{ pollSCM( '* * * * *') }
+    stages{
+        stage('BUILD'){
+            steps{
+            git url: 'https://github.com/Ashit0/spring-petclinic.git'
+                branch: 'develop'
+            } 
+        } 
+        
+    }
+
+}
