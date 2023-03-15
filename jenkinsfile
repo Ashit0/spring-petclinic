@@ -10,13 +10,49 @@ pipeline{
                 branch: 'release'
             } 
         } 
-        stage('Post build'){
-            steps{
-                archiveArtifacts artifacts: '**/target/spring-petclinic-3.0.0-SNAPSHOT.jar',
-                                 onlyIfSuccessful:true
-                junit testResults: '**/surefire-reports/TEST-*.xml'                 
-            }
+       stage ('Artifactory configuration') {
+            steps {
+                rtServer (
+                    id: "ARTIFACTORY_SERVER",
+                    url: https://ashit.jfrog.io/artifactory,
+                    credentialsId: Jfrog
+                )
 
+                rtMavenDeployer (
+                    id: "MAVEN_DEPLOYER",
+                    serverId: "ARTIFACTORY_SERVER",
+                    releaseRepo: libs-release,
+                    snapshotRepo: libs-snapshot
+                )
+
+                rtMavenResolver (
+                    id: "MAVEN_RESOLVER",
+                    serverId: "ARTIFACTORY_SERVER",
+                    releaseRepo: libs-release,
+                    snapshotRepo: libs-snapshot
+                )
+            }
+        }
+        stage('package') {
+           // tools {
+             //   jdk 'java'
+           // }
+            steps {
+                rtMavenRun (
+                    tool: 'maven',
+                    pom: '*/pom.xml',
+                    goals: 'clean install',
+                    deployerId: "MAVEN_DEPLOYER"
+                    resolverId: "MAVEN_RESOLVER"
+                )
+            }
+        }
+        stage('Publish build info'){
+            steps {
+                rtPublishBuildInfo (
+                    serverId: "ARTIFACTORY_SERVER"
+                )
+            }
         }
         stage('Sonar analysis'){
             steps{
@@ -29,45 +65,13 @@ pipeline{
                 }
             }
         }
-       stage ('Artifactory configuration') {
-            steps {
-                rtServer (
-                    id: "ARTIFACTORY_SERVER",
-                    url: 'https://ashit.jfrog.io/artifactory',
-                    credentialsId: 'Jfrog'
-                )
+        stage('Post build'){
+            steps{
+                archiveArtifacts artifacts: '**/target/spring-petclinic-3.0.0-SNAPSHOT.jar',
+                                 onlyIfSuccessful:true
+                junit testResults: '**/surefire-reports/TEST-*.xml'                 
+            }
 
-                rtMavenDeployer (
-                    id: "MAVEN_DEPLOYER",
-                    serverId: "ARTIFACTORY_SERVER",
-                    releaseRepo: 'libs-release',
-                    snapshotRepo: 'libs-snapshot'
-                )
-
-                rtMavenResolver (
-                    id: "MAVEN_RESOLVER",
-                    serverId: "ARTIFACTORY_SERVER",
-                    releaseRepo: 'libs-release',
-                    snapshotRepo: 'libs-snapshot'
-                )
-            }
-        }
-        stage('package') {
-            tools {
-                jdk 'java'
-            }
-            steps {
-                rtMavenRun (
-                    tool: 'maven',
-                    pom: 'pom.xml',
-                    goals: 'clean install',
-                    deployerId: "MAVEN_DEPLOYER"
-                    
-                )
-                rtPublishBuildInfo (
-                    serverId: "ARTIFACTORY_SERVER"
-                )
-            }
         }
         
     }
