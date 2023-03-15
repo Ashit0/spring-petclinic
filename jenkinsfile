@@ -14,7 +14,7 @@ pipeline{
             steps {
                 rtServer (
                     id: "ARTIFACTORY_SERVER",
-                    url: https://ashit.jfrog.io/artifactory,
+                    url: 'https://ashit.jfrog.io/artifactory',
                     credentialsId: Jfrog
                 )
 
