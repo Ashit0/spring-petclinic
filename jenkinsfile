@@ -1,6 +1,6 @@
 pipeline{
     agent{
-        label 'MVN_3'
+        label 'JDK_17'
     }
     triggers{ pollSCM( '* * * * *') }
     stages{
@@ -40,7 +40,7 @@ pipeline{
                     pom: 'pom.xml',
                     goals: 'clean install',
                     deployerId: "MAVEN_DEPLOYER",
-                    resolverId: "MAVEN_RESOLVER"
+                    //resolverId: "MAVEN_RESOLVER"
                 )
             }
         }
