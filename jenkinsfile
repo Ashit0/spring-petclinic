@@ -15,21 +15,21 @@ pipeline{
                 rtServer (
                     id: "ARTIFACTORY_SERVER",
                     url: 'https://ashit.jfrog.io/artifactory',
-                    credentialsId: Jfrog
+                    credentialsId: 'Jfrog'
                 )
 
                 rtMavenDeployer (
                     id: "MAVEN_DEPLOYER",
                     serverId: "ARTIFACTORY_SERVER",
-                    releaseRepo: libs-release,
-                    snapshotRepo: libs-snapshot
+                    releaseRepo: 'libs-release',
+                    snapshotRepo: 'libs-snapshot'
                 )
 
                 rtMavenResolver (
                     id: "MAVEN_RESOLVER",
                     serverId: "ARTIFACTORY_SERVER",
-                    releaseRepo: libs-release,
-                    snapshotRepo: libs-snapshot
+                    releaseRepo: 'libs-release',
+                    snapshotRepo: 'libs-snapshot'
                 )
             }
         }
