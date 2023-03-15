@@ -1,6 +1,6 @@
 pipeline{
     agent{
-        label 'JDK_17'
+        label 'MVN_3'
     }
     triggers{ pollSCM( '* * * * *') }
     stages{
